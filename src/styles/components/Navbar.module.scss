@@ -1,0 +1,21 @@
+@import '../utilities/main.scss';
+
+.container{
+    width: 142px;
+    height: 100vh;
+    background-color: $LIGHT;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    .logo{
+        width: 100px;
+        height: 60px;
+        position: relative;
+        margin: auto;
+        padding: 39px 0px 75px 0px;
+    }
+    .links{
+        border-top: 1px solid $WHITE05;
+        padding: 27px 40px 0px 40px;
+    }
+}
+

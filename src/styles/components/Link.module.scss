@@ -1,0 +1,22 @@
+@import '../utilities/main.scss';
+.nav-link{
+    width: 62.5px;
+    height: 62.5px;
+    position: relative;
+    padding: 18px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 38.5px;
+    border-radius: 16px;
+    opacity: .5;
+    transition: $TRANSITION;
+    &:hover{
+        background-color: $PRIMARY_H;
+        opacity: 1;
+    }
+    &.actived{
+        background-color: $PRIMARY_H;
+        opacity: 1;
+    }
+}

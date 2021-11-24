@@ -1,0 +1,16 @@
+@import '../utilities/main.scss';
+.wrapper{
+    width: 100%;
+    height: 100%;
+    background-color: $LIGHT;
+    color: $WHITE;
+    border: none;
+    border-radius: 32px;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    @include flex-center(unset);
+    &:disabled{
+        opacity: .7;
+        cursor: not-allowed;
+    }
+}

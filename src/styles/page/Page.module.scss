@@ -1,0 +1,115 @@
+@import '../utilities/main.scss';
+.wrapper{
+    width: calc(100% - 142px);
+    height: 100vh;
+    padding: 55px 82px;
+    background-color: $BACKGROUND;
+    h1{
+        color: $LIGHT;
+    }
+    .section{
+        &--top{
+            margin-bottom: 33px; // todo
+            @include flex-row-space(center)
+        }
+        &--bottom{
+            width: 100%;
+            height: calc(100vh - 193px);
+            border-radius: 16px;
+            padding: 53px 67px 110px 67px;
+            background-color: $WHITE;
+            h2{
+                color: $GRAY900;
+                margin-bottom: 34px;
+            }
+        }
+    }
+    .result, .loading{
+        color: $GRAY900;
+        padding: 24px 69px;
+    }
+
+    .route-list{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 25px 69px 17px 69px;
+        border-bottom: 2px solid $WHITE;
+        p, h3{
+            margin: 0px 0px 8px 0px;
+        }
+        h3{
+            color: $LIGHT;
+        }
+        .stop-list{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            color: $GRAY900;
+        }
+        &.darker{
+            background-color: #ECEEFF;
+        }
+    }
+    .search-wrapper{
+        width: 100%;
+        height: calc(100% - 94px);
+        display: grid;
+        grid-template-columns: 381px auto;
+        grid-template-rows: 336px 336px;
+        row-gap: 28px;
+        column-gap: 28px;
+        grid-template-areas: 
+            "search map"
+            "result map"
+    }
+    .item-search {
+        width: 100%;
+        height: 100%;
+        grid-area: search;
+        border-radius: 16px;
+        padding: 44px 33px;
+        background-color: $WHITE;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        h2{
+            margin: 0px;
+            color: $GRAY900;
+        }
+    }
+    .item-result {
+        grid-area: result;
+    }
+    .item-map {
+        grid-area: map;
+    }
+
+    .button-container{
+        width: 274px;
+        height: 41px;
+        margin: 0px auto;
+    }
+    .flex-row{
+        @include flex-row;
+    }
+    .search-route-list{
+        width: 100%;
+        height: 100%;
+        background-color: $WHITE;
+        .search-result-item{
+            height: 41px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px 40px;
+            p{
+                margin-left: 13px;
+            }
+            &.darker{
+                background-color: #F2F2F2;
+            }
+        }
+    }
+}

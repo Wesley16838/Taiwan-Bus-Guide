@@ -1,0 +1,32 @@
+@import '../utilities/main.scss';
+.container{
+    input[type="text"]{
+        width: 311px;
+        height: 49px;
+        font-size: var(--text-md);
+        border-radius: 16px;
+        border: none;
+        text-align: center;
+        box-shadow: $SHADOW;
+        background: url('../../../public/images/search_gray.svg') no-repeat scroll top 14px right 37px;
+        &:focus{
+            outline: none;
+        }
+    }
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: $GRAY900;
+        font-size: 18px;
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+        color: $GRAY900;
+        font-size: 18px;
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+        color: $GRAY900;
+        font-size: 18px;
+    }
+    :-moz-placeholder { /* Firefox 18- */
+        color: $GRAY900;
+        font-size: 18px;
+    }
+}
