@@ -15,7 +15,7 @@ a {
   box-sizing: border-box;
 }
 
-:root{
+:root {
   --font-primary: sans-serif;
   --font-secondary: serif;
 
@@ -23,23 +23,33 @@ a {
   --text-base-size: 1em;
   --text-scale-ratio: 1.2;
 
-   /* type scale */
+  /* type scale */
   --text-xs: calc(1em / (var(--text-scale-ratio) * var(--text-scale-ratio)));
   --text-sm: calc(1em / var(--text-scale-ratio));
   --text-md: calc(1em * var(--text-scale-ratio));
   --text-lg: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio));
-  --text-xl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
-  --text-xxl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
-  --text-xxxl: calc(1em * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio) * var(--text-scale-ratio));
- 
+  --text-xl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio)
+  );
+  --text-xxl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio) * var(--text-scale-ratio)
+  );
+  --text-xxxl: calc(
+    1em * var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio) * var(--text-scale-ratio) *
+      var(--text-scale-ratio)
+  );
+
   --heading-line-height: 1.2;
   --body-line-height: 1.4;
 
   /* spacing values */
-  --space-sm:   calc(var(--baseline)/2);
-  --space-md:   var(--baseline);
-  --space-lg:   calc(var(--baseline)*2);
-  --space-xl:   calc(var(--baseline)*3);
+  --space-sm: calc(var(--baseline) / 2);
+  --space-md: var(--baseline);
+  --space-lg: calc(var(--baseline) * 2);
+  --space-xl: calc(var(--baseline) * 3);
 }
 
 body {
@@ -48,7 +58,11 @@ body {
   color: var(--color-text);
 }
 
-h1, h2, h3, h4, form legend {
+h1,
+h2,
+h3,
+h4,
+form legend {
   color: var(--color-text-heading);
   margin-bottom: var(--space-xxs);
   line-height: var(--heading-line-height);
@@ -59,23 +73,28 @@ h1, h2, h3, h4, form legend {
   font-size: var(--text-xxxl);
 }
 
-h1, .text--xxl {
+h1,
+.text--xxl {
   font-size: var(--text-xxl);
 }
 
-h2, .text--xl {
+h2,
+.text--xl {
   font-size: var(--text-xl);
 }
 
-h3, .text--lg {
+h3,
+.text--lg {
   font-size: var(--text-lg);
 }
 
-h4, .text--md {
+h4,
+.text--md {
   font-size: var(--text-md);
 }
 
-.text--sm, small {
+.text--sm,
+small {
   font-size: var(--text-sm);
 }
 
@@ -85,4 +104,10 @@ h4, .text--md {
 
 p {
   line-height: var(--body-line-height);
+}
+
+.mapboxgl-map {
+  height: 100%;
+  width: 100%;
+  border-radius: 16px;
 }
