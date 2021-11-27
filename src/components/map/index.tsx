@@ -5,7 +5,7 @@ import React, {
   useState,
   useContext,
 } from "react";
-
+import "mapbox-gl/dist/mapbox-gl.css";
 import { UseMapContext } from "../../context/mapProvider";
 import { useDeepEffect } from "../../hooks/useDeepEffect";
 import { MapProps } from "../../types/components";
@@ -34,6 +34,9 @@ const Map = ({ data, center, userLocation }: MapProps) => {
         const name = "";
         const status = "";
         const itemPosition = item.Position;
+        const el = document.createElement("div");
+        el.className = "marker";
+        el.innerHTML = `<p style="margin: 0px; position: relative; top: -10px; left: -1px; font-weight: bold;">${item.StopSequence}</p>`;
         const marker = new mapboxgl.Marker()
           .setLngLat([itemPosition.PositionLon, itemPosition.PositionLat])
           .setPopup(

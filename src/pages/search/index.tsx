@@ -45,14 +45,93 @@ const SearchPage: NextPage = () => {
           `/Bus/DisplayStopOfRoute/City/${search.city}/${search.route}?$format=JSON`
         )
       ),
+      API.get(
+        encodeURI(
+          `/Bus/EstimatedTimeOfArrival/City/${search.city}/${search.route}?$format=JSON`
+        )
+      ),
+      API.get(
+        encodeURI(
+          `/Bus/RealTimeNearStop/City/${search.city}/${search.route}?$format=JSON`
+        )
+      ),
     ]).then((data: any) => {
+      const date = new Date();
+      const minutes = date.getMinutes();
+      const hour = date.getHours();
+      const departureStops: any = [];
+      const returnStops: any = [];
+      data[0].data[0].Stops.forEach((stop: any) => {
+        const index = data[1].data.findIndex(
+          (item: any) =>
+            item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
+            item.Direction === 0
+        );
+        const obj = data[1].data[index];
+        let busStatus = "";
+        switch (obj.StopStatus) {
+          case 0:
+            const hr = Math.floor(obj.EstimateTime / 3600);
+            const min = Math.floor((obj.EstimateTime - 3600 * hr) / 60);
+            const carry = Math.floor((minutes + Math.floor(min)) / 60);
+            busStatus = `${hour + hr + carry} : ${
+              minutes + min - carry * 60 < 10 ? 0 : ""
+            }${minutes + min - carry * 60}`;
+            break;
+          case 1:
+            busStatus = "尚未發車";
+            break;
+          case 2:
+            busStatus = "交管不停靠";
+            break;
+          case 3:
+            busStatus = "末班車已過";
+            break;
+          case 4:
+            busStatus = "今日未營運";
+            break;
+        }
+        departureStops.push({ name: stop, status: busStatus });
+      });
+      data[0].data[1].Stops.forEach((stop: any) => {
+        const index = data[1].data.findIndex(
+          (item: any) =>
+            item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
+            item.Direction === 1
+        );
+        const obj = data[1].data[index];
+        let busStatus = "";
+        switch (obj.StopStatus) {
+          case 0:
+            const hr = Math.floor(obj.EstimateTime / 3600);
+            const min = Math.floor((obj.EstimateTime - 3600 * hr) / 60);
+            const carry = Math.floor((minutes + Math.floor(min)) / 60);
+            busStatus = `${hour + hr + carry} : ${
+              minutes + min - carry * 60 < 10 ? 0 : ""
+            }${minutes + min - carry * 60}`;
+            break;
+          case 1:
+            busStatus = "尚未發車";
+            break;
+          case 2:
+            busStatus = "交管不停靠";
+            break;
+          case 3:
+            busStatus = "末班車已過";
+            break;
+          case 4:
+            busStatus = "今日未營運";
+            break;
+        }
+        returnStops.push({ name: stop, status: busStatus });
+      });
       setResult({
-        departure: data[0].data[0].Stops,
-        return: data[0].data[1].Stops,
+        departure: departureStops,
+        return: returnStops,
       });
     });
   };
-
+  console.log("result,", result);
   return (
     <Layout
       pageTitle={`全台公車運用查詢資訊服務`}
@@ -110,9 +189,8 @@ const SearchPage: NextPage = () => {
                 id={`去${
                   result.departure.length === 0
                     ? "--"
-                    : result.departure[result.departure.length - 1].StopName[
-                        "Zh_tw"
-                      ]
+                    : result.departure[result.departure.length - 1].name
+                        .StopName["Zh_tw"]
                 }`}
               >
                 <div className={styles["search-route-list"]}>
@@ -129,9 +207,10 @@ const SearchPage: NextPage = () => {
                           className={`${styles["search-result-item"]} ${
                             index % 2 === 0 && styles.darker
                           }`}
+                          key={`departure${index}`}
                         >
                           <Image src={arrowIcon} width={16} height={16} />
-                          <p>{stop.StopName["Zh_tw"]}</p>
+                          <p>{stop.name.StopName["Zh_tw"]}</p>
                         </div>
                       );
                     })
@@ -142,7 +221,9 @@ const SearchPage: NextPage = () => {
                 id={`回${
                   result.return.length === 0
                     ? "--"
-                    : result.return[result.return.length - 1].StopName["Zh_tw"]
+                    : result.return[result.return.length - 1].name.StopName[
+                        "Zh_tw"
+                      ]
                 }`}
               >
                 <div className={styles["search-route-list"]}>
@@ -159,9 +240,10 @@ const SearchPage: NextPage = () => {
                           className={`${styles["search-result-item"]} ${
                             index % 2 === 0 && styles.darker
                           }`}
+                          key={`return${index}`}
                         >
                           <Image src={arrowIcon} width={16} height={16} />
-                          <p>{stop.StopName["Zh_tw"]}</p>
+                          <p>{stop.name.StopName["Zh_tw"]}</p>
                         </div>
                       );
                     })
@@ -172,8 +254,13 @@ const SearchPage: NextPage = () => {
           </div>
           <div className={styles["item-map"]}>
             <MyMap
-              data={[]}
-              center={[121.551655, 25.041982]}
+              data={result.departure}
+              center={[
+                result.departure[0]?.name?.StopPosition?.PositionLon ||
+                  121.551655,
+                result.departure[0]?.name?.StopPosition?.PositionLat ||
+                  25.041982,
+              ]}
               userLocation={[121.551655, 25.041982]}
             />
           </div>
