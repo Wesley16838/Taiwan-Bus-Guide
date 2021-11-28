@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { UseMapContext } from "../context/mapProvider";
 const useCurrentLocation = () => {
-    const {userLocation,addUserLocation} =UseMapContext()
+    const {userLocation,addUserLocation} = UseMapContext()
     // store error message in state
     const [error, setError] = useState('');
     const [location, setLocation] = useState({
@@ -27,10 +27,7 @@ const useCurrentLocation = () => {
             latitude,
             longitude
             });
-            addUserLocation({
-              latitude,
-              longitude
-            })
+          addUserLocation(latitude,longitude)
         }
     };
 

@@ -8,22 +8,27 @@ import { UseBusContext } from "../context/busProvider";
 import GEOAPI from "../api/geocode";
 import API from "../api/transport";
 import { useEffect, useState } from "react";
+import { UseMapContext } from "../context/mapProvider";
+import { useDeepEffect } from "../hooks/useDeepEffect";
 
 const Home: NextPage = () => {
   const [bus, setBus] = useState({
     one: [],
     two: [],
+    submit: false,
   });
   const [loading, addLoading] = useState(false);
   const { location, error } = useCurrentLocation();
-
-  useEffect(() => {
+  const { userLocation } = UseMapContext();
+  console.log('userLocation,', userLocation)
+  useDeepEffect(() => {
     const loadData = async () => {
       try {
+        console.log('loaddata,', userLocation)
         addLoading(true);
         const result = await GEOAPI.get(
           encodeURI(
-            `121.551655, 25.041982.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
+            `${userLocation.longitude === '' ? 121.551655 : userLocation.longitude}, ${userLocation.latitude === '' ? 25.041982 : userLocation.latitude}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
           )
         );
         const city = result.data.features.filter((item: any) =>
@@ -32,18 +37,19 @@ const Home: NextPage = () => {
         Promise.all([
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982,121.551655,300)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},300)&$format=JSON`
             )
           ),
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982,121.551655,500)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},500)&$format=JSON`
             )
           ),
         ]).then((data: any) => {
           setBus({
             one: data[0].data,
             two: data[1].data,
+            submit: true,
           });
           addLoading(false);
         });
@@ -52,8 +58,8 @@ const Home: NextPage = () => {
         addLoading(false);
       }
     };
-    if (location.latitude) loadData();
-  }, [location]);
+    if(userLocation.latitude !== '') loadData();
+  }, [userLocation]);
 
   return (
     <Layout
@@ -69,7 +75,7 @@ const Home: NextPage = () => {
           <h2>附近的站牌</h2>
           <Tabs>
             <div id="300m">
-              {loading ? (
+              {loading || !bus.submit ? (
                 <div className={styles.loading}>Loading</div>
               ) : bus.one.length !== 0 ? (
                 bus.one.map((station: any, index: number) => {

@@ -13,9 +13,16 @@ import API from "../../api/transport";
 import Tabs from "../../components/tabs";
 import arrowIcon from "../../../public/images/arrowdown.svg";
 import carIcon from "../../../public/images/car.svg";
+import { UseMapContext } from "../../context/mapProvider";
+import useCurrentLocation from "../../hooks/useCurrentLocation";
 const MyMap = dynamic(() => import("../../components/map"), { ssr: false });
 
 const SearchPage: NextPage = () => {
+  const { userLocation } = UseMapContext();
+  const [location, setLocation] = useState({
+    longitude: userLocation.longitude,
+    latitude: userLocation.latitude
+  })
   const [search, setSearch] = useState({
     city: "",
     route: "",
@@ -29,6 +36,7 @@ const SearchPage: NextPage = () => {
     busReturnLocation: [],
   });
   const [direction, setDirection] = useState(0)
+  const { error } = useCurrentLocation();
   const handleOnChange = (name: string, val: string) => {
     if (name === "city") {
       setSearch({ ...search, city: val, route: "" });
@@ -313,11 +321,11 @@ const SearchPage: NextPage = () => {
               data={direction === 0 ? result.departure : result.return}
               center={[
                 result.departure[0]?.name?.StopPosition?.PositionLon ||
-                  121.551655,
+                userLocation.longitude === '' ? 121.551655 : userLocation.longitude, 
                 result.departure[0]?.name?.StopPosition?.PositionLat ||
-                  25.041982,
+                userLocation.latitude === '' ? 25.041982 : userLocation.latitude
               ]}
-              userLocation={[121.551655, 25.041982]}
+              userLocation={[userLocation.longitude === '' ? 121.551655 : userLocation.longitude, userLocation.latitude === '' ? 25.041982 : userLocation.latitude]}
               busLocation={direction === 0 ? result.busDepartureLocation : result.busReturnLocation}
             />
           </div>

@@ -1,12 +1,12 @@
 import '../../styles/globals.scss'
 import type { AppProps } from 'next/app'
-import BusProvider from '../context/busProvider'
+import MapProvider from '../context/mapProvider'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <BusProvider>
+    <MapProvider>
       <Component {...pageProps} />
-    </BusProvider>
+    </MapProvider>
   )
 }
 

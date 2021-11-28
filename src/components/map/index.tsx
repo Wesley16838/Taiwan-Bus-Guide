@@ -16,10 +16,11 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 
 const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
   const { map, addMap } = UseMapContext();
-
   useDeepEffect(() => {
     const loadMap = () => {
+      console.log('loadMap')
       let newMap: any = map;
+      console.log('newMap', newMap)
       if (newMap === null) {
         newMap = new mapboxgl.Map({
           container: "my-map",
@@ -34,12 +35,15 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
         newMap.removeLayer('route');
         newMap.removeSource('route');
       }
-      if (typeof userLocation[0] === "number") {
+      if (typeof userLocation[0] === "number" && data.length === 0) {
         const el = document.createElement("div");
         el.className = "marker-myself";
         const marker = new mapboxgl.Marker(el)
           .setLngLat([userLocation[0], userLocation[1]])
           .addTo(newMap);
+        newMap.flyTo({
+          center: userLocation,
+        })
       }
       const arr: any[][] = []
       data.forEach((item: any) => { 
@@ -107,8 +111,8 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
       })
       addMap(newMap);
     };
-      if(data !== []) loadMap();
-  }, [data]);
+    loadMap();
+  }, [data, userLocation]);
 
   return <div id="my-map"/>;
 };

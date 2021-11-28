@@ -20,10 +20,14 @@ export function UseMapContext() {
 
 const MapProvider = ({ children }: { children: React.ReactNode }) => {
     const [userLocation, setUserLocation] = useState(contextDefaultValues.userLocation);
-    const addUserLocation = (newLocation: any) => setUserLocation(newLocation);
+    const addUserLocation = (newLatitude: any, newLongitude: any) => {
+        setUserLocation({latitude: newLatitude, longitude: newLongitude})
+    };
 
     const [map, setMap] = useState(contextDefaultValues.map);
-    const addMap = (newMap: any) => setMap(newMap);
+    const addMap = (newMap: any) => {
+        setMap(newMap);
+    }
 
     return (
         <MapContext.Provider
