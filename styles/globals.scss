@@ -106,8 +106,37 @@ p {
   line-height: var(--body-line-height);
 }
 
+.mapboxgl-popup-content{
+  border-radius: 6px !important;
+  text-align: center !important;
+  padding: 10px !important;
+}
+
 .mapboxgl-map {
   height: 100%;
   width: 100%;
   border-radius: 16px;
+}
+
+.marker-myself{
+  background-image: url('/images/person.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 26px;
+  height: 32px;
+}
+
+.stop-marker {
+  background-image: url('/images/stopIcon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -20px;
 }

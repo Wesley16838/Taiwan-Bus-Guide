@@ -22,6 +22,34 @@
         color: $GRAY900;
         margin-bottom: 34px;
       }
+      .news-container{
+        width: 100%;
+        height: 533px;
+        overflow-y: scroll;
+        @include flex-column-space(center);
+        .news-item{
+          &--first, &--second{
+            width: 100%;
+            height: 105px;
+            padding: 24px 69px;
+            @include flex-column-start(flex-start);
+            .date{
+              color: $LIGHT;
+              font-size: var(--text-lg);
+            }
+            .detail{
+              color: $GRAY900;
+              font-size: var(--text-md);
+            }
+          }
+          &--first{
+            background-color: #F6F7FF;
+          }
+          &--second{
+            background-color: #ECEEFF;
+          }
+        }
+      }
     }
   }
   .result,
@@ -101,6 +129,14 @@
   .flex-row {
     @include flex-row;
   }
+  .flex-row-between{
+    width: 100%;
+    margin-top: 5px;
+    @include flex-row-space(center);
+  }
+  .flex-column{
+    @include flex-column-start(flex-start);
+  }
   .search-route-list {
     width: 100%;
     min-height: 100%;
@@ -109,14 +145,27 @@
     border-bottom-right-radius: 16px;
     @include flex-center(column);
     .search-result-item {
-      height: 41px;
       width: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      padding: 0px 40px;
+      padding: 10px 40px;
+      @include flex-column-start(flex-start);
+      .normal{
+          color: $LIGHT;
+          margin: 0px;
+      }
+      .notice{
+          color: $COMPARE;
+          margin: 0px;
+      }
+      .none{
+          color: $GRAY900;
+          margin: 0px;
+      }
+      .car{
+          color: $LIGHT;
+          margin: 0px 0px 0px 5px;
+      }
       p {
-        margin-left: 13px;
+        margin: 0px 0px 0px 8px;
       }
       &.darker {
         background-color: #f2f2f2;

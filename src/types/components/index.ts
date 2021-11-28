@@ -20,21 +20,23 @@ export type InputProps = {
   type: string;
   name: string;
   required: boolean;
-  onChange: any;
+  onChange?: any;
   classname?: string;
   placeholder?: string;
   props?: string[];
   defaultValue?: string;
+  onPress?: any;
 };
 
 export type TabsProps = {
   children: any;
+  onClick?: any;
 };
 
 export type TabProps = {
   activeTab: any;
   label: any;
-  onClick: any;
+  onClick?: any;
   index?: number;
 };
 
@@ -58,6 +60,7 @@ export type MapProps = {
   data: any;
   userLocation: any;
   center: any;
+  busLocation: any;
 };
 
 /**

@@ -26,19 +26,18 @@ const Home: NextPage = () => {
             `121.551655, 25.041982.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
           )
         );
-        console.log(result);
         const city = result.data.features.filter((item: any) =>
           item.id.includes("region")
         )[0].text;
         Promise.all([
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982,121.551655,100)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982,121.551655,300)&$format=JSON`
             )
           ),
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982,121.551655,300)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982,121.551655,500)&$format=JSON`
             )
           ),
         ]).then((data: any) => {
@@ -65,19 +64,11 @@ const Home: NextPage = () => {
       <div className={styles.wrapper}>
         <div className={styles["section--top"]}>
           <h1>BUS STOP | 附近站牌</h1>
-          <Inputbox
-            type={"text"}
-            name={"search"}
-            required={false}
-            onChange={() => console.log("search")}
-            placeholder={"快速搜尋"}
-            defaultValue={""}
-          />
         </div>
         <div className={styles["section--bottom"]}>
           <h2>附近的站牌</h2>
           <Tabs>
-            <div id="100m">
+            <div id="300m">
               {loading ? (
                 <div className={styles.loading}>Loading</div>
               ) : bus.one.length !== 0 ? (
@@ -93,7 +84,7 @@ const Home: NextPage = () => {
                       <div className={styles["stop-list"]}>
                         {station.Stops.map((stop: any, index: number) => {
                           return (
-                            <p>
+                            <p key={stop.RouteName["Zh_tw"]+index}>
                               {index !== 0 && "、"}
                               {stop.RouteName["Zh_tw"]}
                             </p>
@@ -107,7 +98,7 @@ const Home: NextPage = () => {
                 <div className={styles.result}>查無結果</div>
               )}
             </div>
-            <div id="300m">
+            <div id="500m">
               {loading ? (
                 <div className={styles.loading}>Loading</div>
               ) : bus.two.length !== 0 ? (

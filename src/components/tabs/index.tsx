@@ -3,11 +3,12 @@ import { TabsProps } from '../../types/components'
 import Tab from './tab';
 import styles from '../../styles/components/Tabs.module.scss'
 
-const Tabs = ({children}: TabsProps) => {
+const Tabs = ({children, onClick}: TabsProps) => {
 
     const [activeTab, setActiveTab] = useState(children[0].props.id)
     const  onClickTabItem = (tab: any) => {
         setActiveTab(tab);
+        if(onClick) onClick()
     }
     useEffect(()=>{
         setActiveTab(children[0].props.id)
