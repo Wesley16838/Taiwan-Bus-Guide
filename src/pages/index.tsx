@@ -114,7 +114,7 @@ const Home: NextPage = () => {
                       <div className={styles["stop-list"]}>
                         {station.Stops.map((stop: any, index: number) => {
                           return (
-                            <p>
+                            <p key={stop.RouteName["Zh_tw"]+index}>
                               {index !== 0 && "、"}
                               {stop.RouteName["Zh_tw"]}
                             </p>
