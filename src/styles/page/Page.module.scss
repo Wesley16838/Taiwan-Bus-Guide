@@ -24,7 +24,7 @@
       }
       .news-container{
         width: 100%;
-        height: 533px;
+        max-height: 533px;
         overflow-y: scroll;
         /* width */
       &::-webkit-scrollbar {

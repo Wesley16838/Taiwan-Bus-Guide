@@ -51,6 +51,7 @@ const InformationPage: NextPage = () => {
           <h2>最新消息</h2>
           <div className={styles['news-container']}>
             {
+              news.length !== 0 ?
               news.map((item: any, index: number) => {
                 return(
                   <div className={`${styles['flex-column']} ${index%2 !== 0 ? styles['news-item--first'] : styles['news-item--second']}`} key={item.NewsID}>
@@ -63,6 +64,10 @@ const InformationPage: NextPage = () => {
                   </div>
                 )
               })
+              : 
+              <div>
+                無相關資料  
+              </div>
             }
           </div>
         </div>
