@@ -32,8 +32,8 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
         for(let i = 0 ; i<newMap._markers.length; i++){
           newMap._markers[i].remove();
         }
-        newMap.removeLayer('route');
-        newMap.removeSource('route');
+        if(newMap.getLayer('route')) newMap.removeLayer('route');
+        if(newMap.getSource('route')) newMap.removeSource('route');
       }
       if (typeof userLocation[0] === "number" && data.length === 0) {
         const el = document.createElement("div");
