@@ -86,7 +86,7 @@ const SearchPage: NextPage = () => {
             item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
             item.Direction === 0
         );
-        const obj = data[1].data[index];
+        const obj = index!== -1 ? data[1].data[index] : {StopStatus: 5};
         let busStatus = {
           value: '',
           label: ''
@@ -121,6 +121,10 @@ const SearchPage: NextPage = () => {
           case 4:
             busStatus.value = 'none';
             busStatus.label = "今日未營運";
+            break;
+          case 5:
+            busStatus.value = 'none';
+            busStatus.label = "不明";
             break;
         }
         departureStops.push({ name: stop, status: busStatus });
@@ -133,7 +137,7 @@ const SearchPage: NextPage = () => {
             item.Direction === 1
         );
        
-        const obj = data[1].data[index];
+        const obj = index!== -1 ? data[1].data[index] : {StopStatus: 5};
         let busStatus = {
           value: '',
           label: ''
@@ -168,6 +172,10 @@ const SearchPage: NextPage = () => {
           case 4:
             busStatus.value = 'none';
             busStatus.label = "今日未營運";
+            break;
+          case 5:
+            busStatus.value = 'none';
+            busStatus.label = "不明";
             break;
         }
         returnStops.push({ name: stop, status: busStatus });

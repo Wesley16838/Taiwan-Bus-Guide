@@ -18,13 +18,12 @@ const Home: NextPage = () => {
     submit: false,
   });
   const [loading, addLoading] = useState(false);
-  const { location, error } = useCurrentLocation();
+  const [error, setError] = useState('')
+  const { location } = useCurrentLocation();
   const { userLocation } = UseMapContext();
-  console.log('userLocation,', userLocation)
   useDeepEffect(() => {
     const loadData = async () => {
       try {
-        console.log('loaddata,', userLocation)
         addLoading(true);
         const result = await GEOAPI.get(
           encodeURI(
@@ -34,6 +33,15 @@ const Home: NextPage = () => {
         const city = result.data.features.filter((item: any) =>
           item.id.includes("region")
         )[0].text;
+        const country = result.data.features.filter((item: any) =>
+        item.id.includes("country")
+      )[0].text;
+        if(country !== 'Taiwan'){
+          addLoading(false)
+          setBus({...bus, submit: true})
+          setError('SERVICE NOT AVAILABLE HERE')
+          return;
+        }
         Promise.all([
           API.get(
             encodeURI(
@@ -59,7 +67,7 @@ const Home: NextPage = () => {
       }
     };
     if(userLocation.latitude !== '') loadData();
-  }, [userLocation]);
+  }, [userLocation.latitude, userLocation.longitude]);
 
   return (
     <Layout
@@ -101,11 +109,15 @@ const Home: NextPage = () => {
                   );
                 })
               ) : (
-                <div className={styles.result}>查無結果</div>
+                <div className={styles.result}>
+                  {
+                    error=== '' ? '查無結果' : error
+                  }
+                </div>
               )}
             </div>
             <div id="500m">
-              {loading ? (
+              {loading || !bus.submit ? (
                 <div className={styles.loading}>Loading</div>
               ) : bus.two.length !== 0 ? (
                 bus.two.map((station: any, index: number) => {
@@ -131,7 +143,11 @@ const Home: NextPage = () => {
                   );
                 })
               ) : (
-                <div className={styles.result}>查無結果</div>
+                <div className={styles.result}>
+                  {
+                    error=== '' ? '查無結果' : error
+                  }
+                </div>
               )}
             </div>
           </Tabs>

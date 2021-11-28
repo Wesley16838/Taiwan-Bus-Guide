@@ -18,9 +18,7 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
   const { map, addMap } = UseMapContext();
   useDeepEffect(() => {
     const loadMap = () => {
-      console.log('loadMap')
       let newMap: any = map;
-      console.log('newMap', newMap)
       if (newMap === null) {
         newMap = new mapboxgl.Map({
           container: "my-map",
@@ -29,16 +27,12 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
           zoom: 13,
         });
       } else {
-        for(let i = 0 ; i<newMap._markers.length; i++){
-          newMap._markers[i].remove();
+        let num = newMap._markers.length
+        for(let i = 0 ; i<num; i++){
+          newMap._markers[0].remove();
         }
-        if(newMap.getLayer('route')){
-          console.log('newMap.getLayer(route),', newMap.getLayer('route'))
-          newMap.removeLayer('route');
-        }
-        if(newMap.getSource('route')) {
-          console.log('newMap.getLayer(route),', newMap.getLayer('route'))
-          newMap.removeSource('route');
+        if(typeof newMap.getLayer('route') !== 'undefined'){
+          newMap.removeLayer('route').removeSource('route');
         }
       }
       if (typeof userLocation[0] === "number" && data.length === 0) {
@@ -49,6 +43,15 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
           .addTo(newMap);
         newMap.flyTo({
           center: userLocation,
+        })
+      } else {
+        const el = document.createElement("div");
+        el.className = "marker-myself";
+        const marker = new mapboxgl.Marker(el)
+          .setLngLat([userLocation[0], userLocation[1]])
+          .addTo(newMap);
+        newMap.flyTo({
+          center: [data[0].name.StopPosition.PositionLon, data[0].name.StopPosition.PositionLat],
         })
       }
       const arr: any[][] = []
@@ -88,7 +91,8 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
           .setLngLat([location.PositionLon, location.PositionLat])
           .addTo(newMap);
       })
-      newMap.on('load', () => {
+
+      if(arr.length !== 0){
         newMap.addSource('route', {
           'type': 'geojson',
           'data': {
@@ -114,7 +118,8 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
             'line-width': 4
           }
         });
-      })
+      }
+
       addMap(newMap);
     };
     loadMap();
