@@ -18,23 +18,29 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
   const { map, addMap } = UseMapContext();
   useDeepEffect(() => {
     const loadMap = () => {
-      let newMap: any = map;
-      if (newMap === null) {
-        newMap = new mapboxgl.Map({
-          container: "my-map",
-          style: "mapbox://styles/mapbox/light-v10",
-          center: center,
-          zoom: 13,
-        });
-      } else {
-        let num = newMap._markers.length
-        for(let i = 0 ; i<num; i++){
-          newMap._markers[0].remove();
-        }
-        if(typeof newMap.getLayer('route') !== 'undefined'){
-          newMap.removeLayer('route').removeSource('route');
-        }
-      }
+      let newMap = new mapboxgl.Map({
+        container: "my-map",
+        style: "mapbox://styles/mapbox/light-v10",
+        center: center,
+        zoom: 13,
+      });
+      // let newMap: any = map;
+      // if (newMap === null) {
+      //   newMap = new mapboxgl.Map({
+      //     container: "my-map",
+      //     style: "mapbox://styles/mapbox/light-v10",
+      //     center: center,
+      //     zoom: 13,
+      //   });
+      // } else {
+      //   let num = newMap._markers.length
+      //   for(let i = 0 ; i<num; i++){
+      //     newMap._markers[0].remove();
+      //   }
+      //   if(typeof newMap.getLayer('route') !== 'undefined'){
+      //     newMap.removeLayer('route').removeSource('route');
+      //   }
+      // }
       if (typeof userLocation[0] === "number" && data.length === 0) {
         const el = document.createElement("div");
         el.className = "marker-myself";
@@ -91,8 +97,7 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
           .setLngLat([location.PositionLon, location.PositionLat])
           .addTo(newMap);
       })
-
-      if(arr.length !== 0){
+      newMap.on('load', function () {
         newMap.addSource('route', {
           'type': 'geojson',
           'data': {
@@ -118,8 +123,7 @@ const Map = ({ data, center, userLocation, busLocation }: MapProps) => {
             'line-width': 4
           }
         });
-      }
-
+      })
       addMap(newMap);
     };
     loadMap();

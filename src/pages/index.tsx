@@ -27,8 +27,9 @@ const Home: NextPage = () => {
         addLoading(true);
         const result = await GEOAPI.get(
           encodeURI(
-            `${userLocation.longitude === '' ? 121.551655 : userLocation.longitude}, ${userLocation.latitude === '' ? 25.041982 : userLocation.latitude}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
-          )
+            // `${userLocation.longitude === '' ? 121.551655 : userLocation.longitude}, ${userLocation.latitude === '' ? 25.041982 : userLocation.latitude}.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
+            `121.551655, 25.041982.json?access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
+            )
         );
         const city = result.data.features.filter((item: any) =>
           item.id.includes("region")
@@ -45,12 +46,12 @@ const Home: NextPage = () => {
         Promise.all([
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},300)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982, 121.551655,300)&$format=JSON`
             )
           ),
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},500)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982, 121.551655 ,500)&$format=JSON`
             )
           ),
         ]).then((data: any) => {

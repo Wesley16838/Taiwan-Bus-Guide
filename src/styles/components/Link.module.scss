@@ -3,7 +3,6 @@
     width: 62.5px;
     height: 62.5px;
     position: relative;
-    padding: 18px;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -11,6 +10,15 @@
     border-radius: 16px;
     opacity: .5;
     transition: $TRANSITION;
+    @include flex-center(column);
+    @include tablet{
+        width: 40px;
+        height: 40px;
+    }
+    @include desktop-regular{
+        width: 62.5px;
+        height: 62.5px;
+    }
     &:hover{
         background-color: $PRIMARY_H;
         opacity: 1;
@@ -18,5 +26,18 @@
     &.actived{
         background-color: $PRIMARY_H;
         opacity: 1;
+    }
+    .image-container{
+        width: 25px;
+        height: 25px;
+        position: relative;
+        @include tablet{
+            width: 24px;
+            height: 24px;
+        }
+        @include desktop-regular{
+            width: 30px;
+            height: 30px;
+        }
     }
 }

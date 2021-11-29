@@ -22,7 +22,7 @@ const useCurrentLocation = () => {
     // Success handler for geolocation's `getCurrentPosition` method
     const handleSuccess = (position:any) => {
         const { latitude, longitude } = position.coords;
-        if(userLocation.latitude !== latitude || userLocation.longitude !== longitude){
+        if(Math.round(userLocation.latitude*10000) !== Math.round(latitude*10000) || Math.round(userLocation.longitude*10000) !== Math.round((longitude*10000))){
           setLocation({
             latitude,
             longitude

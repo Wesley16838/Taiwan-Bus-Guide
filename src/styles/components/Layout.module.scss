@@ -1,4 +1,6 @@
+@import "../utilities/main.scss";
 .wrapper{
     display: flex;
     flex-direction: row;
+    background-color: $BACKGROUND;
 }

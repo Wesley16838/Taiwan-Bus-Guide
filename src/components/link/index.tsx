@@ -11,10 +11,13 @@ const Link = ({imagePath, imageAlt, classname, destination}: LinkProps) => {
     }
     return(
         <button className={`${styles[classname]} ${asPath.split('/')[1] === destination.split('/')[1] ? styles.actived : ""}`} onClick={() => handleOnClick()}>
-            <Image
-                src={imagePath}
-                alt={imageAlt}
-            />
+            <div className={styles['image-container']}>
+                <Image
+                    src={imagePath}
+                    alt={imageAlt}
+                    layout={'fill'}
+                />  
+            </div>
         </button>
     )
 } 

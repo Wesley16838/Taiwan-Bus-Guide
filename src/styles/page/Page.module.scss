@@ -4,8 +4,24 @@
   min-height: 100vh;
   padding: 55px 82px;
   background-color: $BACKGROUND;
+  @include tablet{
+    width: calc(100% - 80px);
+    padding: 45px 40px;
+    h1 {
+      font-size: 24px;
+    }
+  }
+  @include desktop-regular{
+    padding: 55px 82px;
+    width: calc(100% - 142px);
+    h1 {
+      font-size: var(--text-xxl);
+    }
+  }
+
   h1 {
     color: $LIGHT;
+    margin: 0px;
   }
   .section {
     &--top {
@@ -18,13 +34,28 @@
       border-radius: 16px;
       padding: 53px 67px 110px 67px;
       background-color: $WHITE;
+      @include tablet{
+        padding: 40px;
+        h2 {
+          font-size: 18px;
+        }
+      }
+      @include desktop-regular{
+        h2 {
+          font-size: var(--text-xl);
+        }
+      }
+      
+      @include desktop-regular{
+        padding: 53px 67px 110px 67px;
+      }
       h2 {
         color: $GRAY900;
         margin-bottom: 34px;
       }
       .news-container{
         width: 100%;
-        max-height: 533px;
+        max-height: calc(100% - 90px);
         overflow-y: scroll;
         /* width */
       &::-webkit-scrollbar {
@@ -55,12 +86,30 @@
             @include flex-column-start(flex-start);
             .date{
               color: $LIGHT;
-              font-size: var(--text-lg);
             }
             .detail{
               color: $GRAY900;
-              font-size: var(--text-md);
             }
+            
+            @include tablet{
+              padding: 15px 40px;
+              .date{
+                font-size: var(--text-md);
+              }
+              .detail{
+                font-size: var(--text-sm);
+              }
+            }
+            @include desktop-regular{
+              padding: 24px 69px;
+              .date{
+                font-size: var(--text-lg);
+              }
+              .detail{
+                font-size: var(--text-md);
+              }
+            }
+            
           }
           &--first{
             background-color: #F6F7FF;

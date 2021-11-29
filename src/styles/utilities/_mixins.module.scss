@@ -12,8 +12,15 @@
     }
 }
   
-@mixin desktop {
-    @media (min-width: #{$BREAKPOINT_DESKTOP}) {
+@mixin desktop-regular {
+  @media (min-width: #{$BREAKPOINT_DESKTOP_REGULAR}) {
+    @content;
+  }
+}
+
+
+@mixin desktop-large {
+    @media (min-width: #{$BREAKPOINT_DESKTOP_LARGE}) {
       @content;
     }
 }
