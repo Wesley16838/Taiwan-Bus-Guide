@@ -118,7 +118,7 @@
             background-color: #F6F7FF;
           }
           &--second{
-            background-color: #ECEEFF;
+            background-color: #ECEEFF; 
           }
         }
       }
@@ -128,10 +128,9 @@
   .loading {
     color: $GRAY900;
     padding: 24px 69px;
-  }
-  .loading {
     text-align: center;
   }
+
   .route-list {
     display: flex;
     flex-direction: column;
