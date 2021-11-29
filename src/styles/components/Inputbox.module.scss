@@ -1,5 +1,9 @@
 @import '../utilities/main.scss';
 .container{
+    margin-bottom: 30px;
+    @include tablet{
+        margin-bottom: 0px;
+    }
     input[type="text"]{
         width: 311px;
         height: 49px;

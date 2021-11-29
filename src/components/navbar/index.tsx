@@ -12,7 +12,7 @@ const NavBar = () => {
                 <Image src={logo} layout={'fill'} objectFit={'contain'}/>
             </div>
             <div className={styles.links}>
-                <div>
+                <div className={styles.link}>
                     <Link 
                         imagePath={locationIcon} 
                         imageAlt={'Bus stop around of current location'}
@@ -20,7 +20,7 @@ const NavBar = () => {
                         destination={'/'}
                     />
                 </div>
-                <div>
+                <div className={styles.link}>
                     <Link 
                         imagePath={searchIcon} 
                         imageAlt={'Search bus stops'}
@@ -28,7 +28,7 @@ const NavBar = () => {
                         destination={'/search'}
                     />
                 </div>
-                <div>
+                <div className={styles.link}>
                     <Link 
                         imagePath={notificationIcon} 
                         imageAlt={'Notification'}

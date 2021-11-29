@@ -1,57 +1,57 @@
 @import "../utilities/main.scss";
 .wrapper {
-  width: calc(100% - 142px);
+  width: 100%;
   min-height: 100vh;
-  padding: 55px 82px;
+  padding: 30px 40px;
   background-color: $BACKGROUND;
   @include tablet{
     width: calc(100% - 80px);
     padding: 45px 40px;
-    h1 {
-      font-size: 24px;
-    }
   }
   @include desktop-regular{
     padding: 55px 82px;
     width: calc(100% - 142px);
-    h1 {
-      font-size: var(--text-xxl);
-    }
+    
   }
 
   h1 {
     color: $LIGHT;
     margin: 0px;
+    font-size: 24px;
+    @include desktop-regular{
+      font-size: var(--text-xxl);
+    }
   }
   .section {
     &--top {
       margin-bottom: 33px; // todo
-      @include flex-row-space(center);
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      @include tablet{
+        @include flex-row-space(center);
+      }
     }
     &--bottom {
       width: 100%;
       height: calc(100vh - 193px);
       border-radius: 16px;
-      padding: 53px 67px 110px 67px;
+      padding: 40px;
       background-color: $WHITE;
       @include tablet{
         padding: 40px;
-        h2 {
-          font-size: 18px;
-        }
-      }
-      @include desktop-regular{
-        h2 {
-          font-size: var(--text-xl);
-        }
       }
       
       @include desktop-regular{
         padding: 53px 67px 110px 67px;
       }
       h2 {
+        font-size: 18px;
         color: $GRAY900;
         margin-bottom: 34px;
+        @include desktop-regular{
+          font-size: var(--text-xl);
+        }
       }
       .news-container{
         width: 100%;
@@ -81,9 +81,12 @@
         .news-item{
           &--first, &--second{
             width: 100%;
-            padding: 24px 69px;
+            padding: 24px 30px;
             margin-bottom: 2px;
             @include flex-column-start(flex-start);
+            @include tablet{
+              padding: 24px 69px;
+            }
             .date{
               color: $LIGHT;
             }
@@ -126,7 +129,9 @@
     color: $GRAY900;
     padding: 24px 69px;
   }
-
+  .loading {
+    text-align: center;
+  }
   .route-list {
     display: flex;
     flex-direction: column;
@@ -154,13 +159,21 @@
     width: 100%;
     height: calc(100% - 94px);
     display: grid;
-    grid-template-columns: 381px auto;
-    grid-template-rows: 336px 336px;
+    grid-template-columns: auto;
+    grid-template-rows: 336px 336px 336px;
     row-gap: 28px;
     column-gap: 28px;
     grid-template-areas:
+        "search"
+        "result"
+        "map";
+    @include tablet{
+      grid-template-columns: 381px auto;
+      grid-template-rows: 336px 336px;
+      grid-template-areas:
       "search map"
       "result map";
+    }
   }
   .item-search {
     width: 100%;

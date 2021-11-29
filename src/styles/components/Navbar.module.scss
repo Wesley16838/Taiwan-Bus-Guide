@@ -1,33 +1,57 @@
 @import "../utilities/main.scss";
 
 .container {
-  width: 80px;
-  min-height: 100vh;
+  width: 100vw;
+  height: 60px;
   background-color: $LIGHT;
   border-top-right-radius: 16px;
   border-bottom-right-radius: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 40px;
+  flex-direction: row;
   @include tablet{
+    padding: unset;
     width: 80px;
+    height: unset;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: unset;
   }
   @include desktop-regular{
     width: 142px;
   }
   .logo {
     width: 100px;
-    height: 60px;
+    height: 40px;
     position: relative;
-    margin: auto;
-    padding: 39px 0px 75px 0px;
+    margin: 0px;
+    padding: 0px;
     @include tablet{
       width: 60px;
+      height: 60px;
+      padding: 39px 0px 75px 0px;
     }
     @include desktop-regular{
       width: 100px;
     }
   }
   .links {
-    border-top: 1px solid $WHITE05;
-    padding-top: 27px;
-    @include flex-center(column)
+    display: flex;
+    flex-direction: row;
+    @include tablet{
+      flex-direction: column;
+      border-top: 1px solid $WHITE05;
+    }
+    .link{
+      @include flex-center(column);
+      margin-left: 15px;
+      @include tablet{
+        padding-top: 27px;
+        margin: 0px;
+      }
+    }
   }
 }
