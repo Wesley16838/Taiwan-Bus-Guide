@@ -48,6 +48,7 @@
       h2 {
         font-size: 18px;
         color: $GRAY900;
+        margin-top: 0px;
         margin-bottom: 34px;
         @include desktop-regular{
           font-size: var(--text-xl);
@@ -132,20 +133,31 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 25px 69px 17px 69px;
+    padding: 20px 25px;
     border-bottom: 2px solid $WHITE;
+    @include tablet{
+      padding: 25px 69px 17px 69px;
+    }
     p,
     h3 {
       margin: 0px 0px 8px 0px;
     }
     h3 {
       color: $LIGHT;
+      font-size: 14px;
+      @include tablet{
+        font-size: var(--text-lg);
+      }
     }
     .stop-list {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       color: $GRAY900;
+      font-size: 12px;
+      @include tablet{
+        font-size: var(--text-base-size);
+      }
     }
     &.darker {
       background-color: #eceeff;
