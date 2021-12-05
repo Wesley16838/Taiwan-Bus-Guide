@@ -46,12 +46,14 @@ const Home: NextPage = () => {
         Promise.all([
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},300)&$format=JSON`
+              // `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},300)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982, 121.551655 ,300)&$format=JSON`
             )
           ),
           API.get(
             encodeURI(
-              `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},500)&$format=JSON`
+              // `/Bus/Station/City/${city}?$spatialFilter=nearby(${userLocation.latitude === '' ? 25.041982 : userLocation.latitude},${userLocation.longitude === '' ? 121.551655 : userLocation.longitude},500)&$format=JSON`
+              `/Bus/Station/City/${city}?$spatialFilter=nearby(25.041982, 121.551655, 500)&$format=JSON`
             )
           ),
         ]).then((data: any) => {
