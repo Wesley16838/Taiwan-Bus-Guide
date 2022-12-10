@@ -15,6 +15,7 @@ import arrowIcon from "../../../public/images/arrowdown.svg";
 import carIcon from "../../../public/images/car.svg";
 import { UseMapContext } from "../../context/mapProvider";
 import useCurrentLocation from "../../hooks/useCurrentLocation";
+import { GetAuthorizationHeader } from "../../api/helper";
 const MyMap = dynamic(() => import("../../components/map"), { ssr: false });
 
 const SearchPage: NextPage = () => {
@@ -40,6 +41,7 @@ const SearchPage: NextPage = () => {
   const handleOnChange = (name: string, val: string) => {
     if (name === "city") {
       setSearch({ ...search, city: val, route: "" });
+      setRoutes([]);
       API.get(encodeURI(`/Bus/Route/City/${val}?$format=JSON`)).then(
         (data: any) => {
           setRoutes(data.data.map((item: any) => item.RouteName["Zh_tw"]));
@@ -51,143 +53,171 @@ const SearchPage: NextPage = () => {
   };
 
   const handleOnSubmit = () => {
-
-    Promise.all([
-      API.get(
-        encodeURI(
-          `/Bus/DisplayStopOfRoute/City/${search.city}/${search.route}?$format=JSON`
-        )
-      ),
-      API.get(
-        encodeURI(
-          `/Bus/EstimatedTimeOfArrival/City/${search.city}/${search.route}?$format=JSON`
-        )
-      ),
-      API.get(
-        encodeURI(
-          `/Bus/RealTimeNearStop/City/${search.city}/${search.route}?$format=JSON`
-        )
-      ),
-      API.get(
-        encodeURI(
-          `/Bus/RealTimeByFrequency/City/${search.city}/${search.route}?$format=JSON`
-        )
-      )
-    ]).then((data: any) => {
-      const date = new Date();
-      const minutes = date.getMinutes();
-      const hour = date.getHours();
-      const departureStops: any = [];
-      const returnStops: any = [];
-      data[0].data[0].Stops.forEach((stop: any) => {
-        const busEvent = data[2].data.find((event: any) => event.StopName['Zh_tw'] === stop.StopName["Zh_tw"] && event.Direction === 0)
-        const index = data[1].data.findIndex(
-          (item: any) =>
-            item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
-            item.Direction === 0
-        );
-        const obj = index!== -1 ? data[1].data[index] : {StopStatus: 5};
-        let busStatus = {
-          value: '',
-          label: ''
-        };
-        switch (obj.StopStatus) {
-          case 0:
-            if(busEvent !== undefined) {
-              busStatus.value = 'notice'
-              busStatus.label = busEvent.A2EventType === 0 ? `離站中_${busEvent.PlateNumb}` : `進站中_${busEvent.PlateNumb}`
-            } else {
-              const hr = Math.floor(obj.EstimateTime / 3600);
-              const min = Math.floor((obj.EstimateTime - 3600 * hr) / 60);
-              const carry = Math.floor((minutes + Math.floor(min)) / 60);
-              busStatus.value = 'normal';
-              busStatus.label = `${hour + hr + carry} : ${
-                minutes + min - carry * 60 < 10 ? 0 : ""
-              }${minutes + min - carry * 60}`;
+    const loadData = () => {
+      GetAuthorizationHeader()
+      .then(async (token: any) => {
+        Promise.all([
+          API.get(
+            encodeURI(
+              `/Bus/DisplayStopOfRoute/City/${search.city}/${search.route}?$format=JSON`
+            ),{
+              headers: {
+                  "authorization": "Bearer " + token,
+              }
+          }
+          ),
+          API.get(
+            encodeURI(
+              `/Bus/EstimatedTimeOfArrival/City/${search.city}/${search.route}?$format=JSON`
+            ),{
+              headers: {
+                  "authorization": "Bearer " + token,
+              }
+          }
+          ),
+          API.get(
+            encodeURI(
+              `/Bus/RealTimeNearStop/City/${search.city}/${search.route}?$format=JSON`
+            ),{
+              headers: {
+                  "authorization": "Bearer " + token,
+              }
+          }
+          ),
+          API.get(
+            encodeURI(
+              `/Bus/RealTimeByFrequency/City/${search.city}/${search.route}?$format=JSON`
+            ),{
+              headers: {
+                  "authorization": "Bearer " + token,
+              }
+          }
+          )
+        ]).then((data: any) => {
+          const date = new Date();
+          const minutes = date.getMinutes();
+          const hour = date.getHours();
+          const departureStops: any = [];
+          const returnStops: any = [];
+          data[0].data[0].Stops.forEach((stop: any) => {
+            const busEvent = data[2].data.find((event: any) => event.StopName['Zh_tw'] === stop.StopName["Zh_tw"] && event.Direction === 0)
+            const index = data[1].data.findIndex(
+              (item: any) =>
+                item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
+                item.Direction === 0
+            );
+            const obj = index!== -1 ? data[1].data[index] : {StopStatus: 5};
+            let busStatus = {
+              value: '',
+              label: ''
+            };
+            switch (obj.StopStatus) {
+              case 0:
+                if(busEvent !== undefined) {
+                  busStatus.value = 'notice'
+                  busStatus.label = busEvent.A2EventType === 0 ? `離站中_${busEvent.PlateNumb}` : `進站中_${busEvent.PlateNumb}`
+                } else {
+                  const hr = Math.floor(obj.EstimateTime / 3600);
+                  const min = Math.floor((obj.EstimateTime - 3600 * hr) / 60);
+                  const carry = Math.floor((minutes + Math.floor(min)) / 60);
+                  busStatus.value = 'normal';
+                  busStatus.label = `${hour + hr + carry} : ${
+                    minutes + min - carry * 60 < 10 ? 0 : ""
+                  }${minutes + min - carry * 60}`;
+                }
+                break;
+              case 1:
+                busStatus.value = 'none';
+                busStatus.label = "尚未發車";
+                break;
+              case 2:
+                busStatus.value = 'none';
+                busStatus.label = "交管不停靠";
+                break;
+              case 3:
+                busStatus.value = 'none';
+                busStatus.label = "末班車已過";
+                break;
+              case 4:
+                busStatus.value = 'none';
+                busStatus.label = "今日未營運";
+                break;
+              case 5:
+                busStatus.value = 'none';
+                busStatus.label = "不明";
+                break;
             }
-            break;
-          case 1:
-            busStatus.value = 'none';
-            busStatus.label = "尚未發車";
-            break;
-          case 2:
-            busStatus.value = 'none';
-            busStatus.label = "交管不停靠";
-            break;
-          case 3:
-            busStatus.value = 'none';
-            busStatus.label = "末班車已過";
-            break;
-          case 4:
-            busStatus.value = 'none';
-            busStatus.label = "今日未營運";
-            break;
-          case 5:
-            busStatus.value = 'none';
-            busStatus.label = "不明";
-            break;
-        }
-        departureStops.push({ name: stop, status: busStatus });
-      });
-      data[0]?.data[1]?.Stops.forEach((stop: any) => {
-        const busEvent = data[2].data.find((event: any) => event.StopName['Zh_tw'] === stop.StopName["Zh_tw"] && event.Direction === 1)
-        const index = data[1].data.findIndex(
-          (item: any) =>
-            item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
-            item.Direction === 1
-        );
-       
-        const obj = index!== -1 ? data[1].data[index] : {StopStatus: 5};
-        let busStatus = {
-          value: '',
-          label: ''
-        };
-        switch (obj.StopStatus) {
-          case 0:
-            if(busEvent !== undefined) {
-              busStatus.value = 'notice'
-              busStatus.label = busEvent.A2EventType === 0 ? `離站中_${busEvent.PlateNumb}` : `進站中_${busEvent.PlateNumb}`
-            } else {
-              const hr = Math.floor(obj.EstimateTime / 3600);
-              const min = Math.floor((obj.EstimateTime - 3600 * hr) / 60);
-              const carry = Math.floor((minutes + Math.floor(min)) / 60);
-              busStatus.value = 'normal';
-              busStatus.label = `${hour + hr + carry} : ${
-                minutes + min - carry * 60 < 10 ? 0 : ""
-              }${minutes + min - carry * 60}`;
+            departureStops.push({ name: stop, status: busStatus });
+          });
+          data[0]?.data[1]?.Stops.forEach((stop: any) => {
+            const busEvent = data[2].data.find((event: any) => event.StopName['Zh_tw'] === stop.StopName["Zh_tw"] && event.Direction === 1)
+            const index = data[1].data.findIndex(
+              (item: any) =>
+                item.StopName["Zh_tw"] === stop.StopName["Zh_tw"] &&
+                item.Direction === 1
+            );
+          
+            const obj = index!== -1 ? data[1].data[index] : {StopStatus: 5};
+            let busStatus = {
+              value: '',
+              label: ''
+            };
+            switch (obj.StopStatus) {
+              case 0:
+                if(busEvent !== undefined) {
+                  busStatus.value = 'notice'
+                  busStatus.label = busEvent.A2EventType === 0 ? `離站中_${busEvent.PlateNumb}` : `進站中_${busEvent.PlateNumb}`
+                } else {
+                  const hr = Math.floor(obj.EstimateTime / 3600);
+                  const min = Math.floor((obj.EstimateTime - 3600 * hr) / 60);
+                  const carry = Math.floor((minutes + Math.floor(min)) / 60);
+                  busStatus.value = 'normal';
+                  busStatus.label = `${hour + hr + carry} : ${
+                    minutes + min - carry * 60 < 10 ? 0 : ""
+                  }${minutes + min - carry * 60}`;
+                }
+                break;
+              case 1:
+                busStatus.value = 'none';
+                busStatus.label = "尚未發車";
+                break;
+              case 2:
+                busStatus.value = 'none';
+                busStatus.label = "交管不停靠";
+                break;
+              case 3:
+                busStatus.value = 'none';
+                busStatus.label = "末班車已過";
+                break;
+              case 4:
+                busStatus.value = 'none';
+                busStatus.label = "今日未營運";
+                break;
+              case 5:
+                busStatus.value = 'none';
+                busStatus.label = "不明";
+                break;
             }
-            break;
-          case 1:
-            busStatus.value = 'none';
-            busStatus.label = "尚未發車";
-            break;
-          case 2:
-            busStatus.value = 'none';
-            busStatus.label = "交管不停靠";
-            break;
-          case 3:
-            busStatus.value = 'none';
-            busStatus.label = "末班車已過";
-            break;
-          case 4:
-            busStatus.value = 'none';
-            busStatus.label = "今日未營運";
-            break;
-          case 5:
-            busStatus.value = 'none';
-            busStatus.label = "不明";
-            break;
-        }
-        returnStops.push({ name: stop, status: busStatus });
-      });
-      setResult({
-        departure: departureStops,
-        return: returnStops,
-        busDepartureLocation: data[3].data.filter((stop: any) => stop.Direction === 0),
-        busReturnLocation: data[3].data.filter((stop: any) => stop.Direction === 1)
-      });
-      setSearch({...search, submit: true})
-    });
+            returnStops.push({ name: stop, status: busStatus });
+          });
+          setResult({
+            departure: departureStops,
+            return: returnStops,
+            busDepartureLocation: data[3].data.filter((stop: any) => stop.Direction === 0),
+            busReturnLocation: data[3].data.filter((stop: any) => stop.Direction === 1)
+          });
+          setSearch({...search, submit: true})
+        });
+      })
+    }
+    loadData()
+    // let interval: any = null
+    //     if(search.route !==''){
+    //         interval = setInterval(function load(){
+    //             loadData()
+    //             return load;
+    //         }(), 15000);
+    //     }
   };
 
   return (

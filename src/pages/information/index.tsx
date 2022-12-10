@@ -6,14 +6,23 @@ import API from "../../api/transport";
 import Image from 'next/image'
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import { GetAuthorizationHeader } from '../../api/helper';
 
 const InformationPage: NextPage = () => {
   const [news, setNews] = useState([])
   useEffect(()=>{
     const loadData = async() => {
       try{
-        const news = await API.get(encodeURI(`/Bus/News/InterCity?$format=JSON`))
-        setNews(news.data)
+        GetAuthorizationHeader()
+        .then(async (token: any) => {
+          const news = await API.get(encodeURI(`/Bus/News/InterCity?$format=JSON`),{
+            headers: {
+                "authorization": "Bearer " + token,
+            }
+        })
+          setNews(news.data)
+        })
+        
       }catch(err){
         console.log('err,', err)
       }
@@ -23,8 +32,16 @@ const InformationPage: NextPage = () => {
 
   const handleOnSearch = async (word: string) => {
     try{
-      const news = await API.get(encodeURI(`/Bus/News/InterCity?$filter=contains(Title,'${word}')&$format=JSON`))
+      GetAuthorizationHeader()
+      .then(async (token: any) => {
+          const news = await API.get(encodeURI(`/Bus/News/InterCity?$filter=contains(Title,'${word}')&$format=JSON`),{
+            headers: {
+                "authorization": "Bearer " + token,
+            }
+        })
       setNews(news.data)
+      })
+    
     }catch(err){
       console.log('err,', err)
     }
